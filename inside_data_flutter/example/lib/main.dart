@@ -84,18 +84,25 @@ class TestDriftLoader extends StatelessWidget {
 
     await drift.init();
 
-    var basic = (await drift.section('773'))!;
-    assert(basic.link.isNotEmpty && basic.content.length > 4);
-    await loader.prepareUpdate(DateTime.fromMillisecondsSinceEpoch(0));
+    await drift.database.setUpdateTime(DateTime.now());
+    await drift.database
+        .setUpdateTime(DateTime.now().subtract(const Duration(days: 1)));
 
-    // This is a clumsy API - to get latest data, call init? Again? After loading data in
-    // another API?
-    await drift.init();
+    final length = await drift.database.getUpdateTime();
 
-    var full = await (drift.topLevel());
-    assert(full.length ==
-        full.where((element) => element.content.length > 2).length);
+    return "simplified for other bug";
+    // var basic = (await drift.section('773'))!;
+    // assert(basic.link.isNotEmpty && basic.content.length > 4);
+    // await loader.prepareUpdate(DateTime.fromMillisecondsSinceEpoch(0));
 
-    return full.first.description;
+    // // This is a clumsy API - to get latest data, call init? Again? After loading data in
+    // // another API?
+    // await drift.init();
+
+    // var full = await (drift.topLevel());
+    // assert(full.length ==
+    //     full.where((element) => element.content.length > 2).length);
+
+    // return full.first.description;
   }
 }

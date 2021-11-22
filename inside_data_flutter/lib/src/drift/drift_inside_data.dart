@@ -286,7 +286,6 @@ class InsideDatabase extends _$InsideDatabase {
   }
 
   Future<void> setUpdateTime(DateTime time) async {
-    await delete(updateTimeTable).go();
     await into(updateTimeTable).insert(
         UpdateTimeTableCompanion.insert(
             id: const Value(0), updateTime: time.millisecondsSinceEpoch),
@@ -294,10 +293,13 @@ class InsideDatabase extends _$InsideDatabase {
   }
 
   Future<DateTime?> getUpdateTime() async {
-    final row = await select(updateTimeTable).getSingleOrNull();
-    return row == null
-        ? null
-        : DateTime.fromMillisecondsSinceEpoch(row.updateTime);
+    final row = await select(updateTimeTable).get();
+
+    assert(row.length < 2);
+    final data = row.isNotEmpty ? row.single : null;
+
+    return DateTime.fromMillisecondsSinceEpoch(
+        data?.updateTime ?? DateTime.now().millisecondsSinceEpoch);
   }
 }
 
