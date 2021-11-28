@@ -45,7 +45,6 @@ android {
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "org.insidechassidus.inside_chassidus"
         minSdkVersion 19
         targetSdkVersion 29
@@ -68,7 +67,10 @@ android {
     buildTypes {
         release {
             signingConfig signingConfigs.release
+            // This used to be needed for audio service, not to lose icons. Maybe it still is? TODO: look into.
             shrinkResources false
+            // This adds a few megabytes to build size, but cloud build works again.
+            // Possibly caused by moor (drift)? Something to look in to
             minifyEnabled false
         }
         debug {
